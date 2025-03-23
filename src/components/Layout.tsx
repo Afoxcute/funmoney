@@ -9,14 +9,9 @@ import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useConnect, useDisconnect } from 'wagmi';
 import { useEffect, useMemo } from 'react';
-import { ConnectButton, connectorsForWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { argentWallet, coinbaseWallet, imTokenWallet, injectedWallet, ledgerWallet, metaMaskWallet, omniWallet, rainbowWallet, trustWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
-
-import { ParticleNetwork } from '@particle-network/auth';
-import { particleWallet } from '@particle-network/rainbowkit-ext';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import '@rainbow-me/rainbowkit/styles.css';
-
 
 const NAV_ITEMS = [
   {
@@ -40,8 +35,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const { isConnected } = useAccount();
   const router = useRouter(); // Initialize useRouter
-
-
 
   const handleLinkClick = (path: string) => {
     if (!isConnected && path !== '/') {
