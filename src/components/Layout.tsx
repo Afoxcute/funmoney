@@ -7,10 +7,7 @@ import { Home, GamepadIcon, History } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { toast } from 'react-hot-toast'; 
 import Image from 'next/image';
-import { useConnect as useParticleConnect } from '@particle-network/auth-core-modal';
-import { AuthCoreEvent, getLatestAuthType, isSocialAuthType, particleAuth } from '@particle-network/auth-core';
 import { useConnect, useDisconnect } from 'wagmi';
-import { particleWagmiWallet } from '../particleWagmiWallet';
 import { useEffect, useMemo } from 'react';
 import { ConnectButton, connectorsForWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { argentWallet, coinbaseWallet, imTokenWallet, injectedWallet, ledgerWallet, metaMaskWallet, omniWallet, rainbowWallet, trustWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
@@ -19,10 +16,6 @@ import { ParticleNetwork } from '@particle-network/auth';
 import { particleWallet } from '@particle-network/rainbowkit-ext';
 
 import '@rainbow-me/rainbowkit/styles.css';
-
-// import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-// import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains';
-// import { publicProvider } from 'wagmi/providers/public';
 
 
 const NAV_ITEMS = [
@@ -49,30 +42,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter(); // Initialize useRouter
 
 
-//   const particle = useMemo(() => new ParticleNetwork({
-//     projectId: process.env.REACT_APP_PROJECT_ID as string,
-//     clientKey: process.env.REACT_APP_CLIENT_KEY as string,
-//     appId: process.env.REACT_APP_APP_ID as string,
-//     chainName: 'Ethereum',
-//     chainId: 1,
-//     wallet: { displayWalletEntry: true },
-//   }), []);
-
-// const { connect } = useConnect();
-// const { connectionStatus } = useParticleConnect();
-// const { disconnect } = useDisconnect();
-
-// useEffect(() => {
-//   const authType = getLatestAuthType();
-//   if (connectionStatus === 'connected' && authType && isSocialAuthType(authType)) {
-//       connect({
-//           connector: particleWagmiWallet({ socialType: authType }),
-//       });
-//   }
-//   const onDisconnect = () => disconnect();
-//   particleAuth.on(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
-//   return () => particleAuth.off(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
-// }, [connect, connectionStatus, disconnect]);
 
   const handleLinkClick = (path: string) => {
     if (!isConnected && path !== '/') {
