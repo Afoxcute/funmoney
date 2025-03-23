@@ -15,8 +15,8 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { formatEther } from 'viem';
-import { useAccount, useReadContract } from 'wagmi';
-import { abi, contractAddress } from '../constants/contractInfo';
+import { useAccount, useReadContract, useChainId } from 'wagmi';
+import { getContractInfo } from '../constants';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Game, GameHistoryCardProps } from '../types';
@@ -26,17 +26,19 @@ import { Game, GameHistoryCardProps } from '../types';
 const GameHistory = () => {
   const account = useAccount()
   const router = useRouter();
+  const chainId = useChainId();
+  const { abi, contractAddress, networkName } = getContractInfo(chainId);
 
     const gamesIdResult = useReadContract({
       abi,
-      address: contractAddress,
+      address: contractAddress as `0x${string}`,
       functionName: 'getUserGames',
       args: [account.address],
     });
 
     const contractGamesResult = useReadContract({
       abi,
-      address: contractAddress,
+      address: contractAddress as `0x${string}`,
       functionName: 'getGamesInfo',
       args: [gamesIdResult.data],
     });
@@ -55,6 +57,9 @@ const GameHistory = () => {
 
   return (
     <div className='space-y-4'>
+      <div className='text-sm bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center justify-between mb-4'>
+        <span>Active Network: <span className='text-blue-400'>{networkName}</span></span>
+      </div>
       <p className='text-white'>Game History</p>
       {gamesResult &&
         gamesResult.map((game) => (

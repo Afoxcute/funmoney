@@ -10,8 +10,8 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { formatEther, parseEther } from 'viem';
-import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { abi, contractAddress } from '../constants/contractInfo';
+import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract, useChainId } from 'wagmi';
+import { getContractInfo } from '../constants';
 import GameSearchCard from './GameSearchCard';
 import toast from 'react-hot-toast';
 import { extractErrorMessages } from '../utils';
@@ -20,6 +20,9 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 
 export default function JoinGame() {
+      const chainId = useChainId();
+      const { abi, contractAddress, networkName } = getContractInfo(chainId);
+      
       const {
         data: hash,
         error,
@@ -43,7 +46,7 @@ export default function JoinGame() {
 
       const gameResult = useReadContract({
         abi,
-        address: contractAddress,
+        address: contractAddress as `0x${string}`,
         functionName: 'getGameById',
         args: [BigInt(proofedSearchQuery)],
         scopeKey: refreshToken
@@ -71,7 +74,7 @@ export default function JoinGame() {
     const toastId = toast.loading('Preparing to join game...',)
 try {
   await writeContract({
-    address: contractAddress,
+    address: contractAddress as `0x${string}`,
     abi,
     functionName: 'joinGame',
     args: [id],
@@ -120,6 +123,11 @@ useEffect(() => {
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
       <div className='space-y-6 text-white'>
+        {/* Network Info */}
+        <div className='text-sm bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center justify-between'>
+          <span>Active Network: <span className='text-blue-400'>{networkName}</span></span>
+        </div>
+        
         {/* Search and Refresh Section */}
         <div className='flex gap-4'>
           <div className='flex-1 relative'>

@@ -20,8 +20,8 @@ export const config = getDefaultConfig({
   ],
   ssr: true,
   transports: {
-    [arbitrumSepolia.id]: http(
-      'https://sepolia-rollup.arbitrum.io/rpc'
-    ),
+    [lineaSepolia.id]: http('https://rpc.sepolia.linea.build'),
+    [bscTestnet.id]: http('https://data-seed-prebsc-1-s1.binance.org:8545'),
+    [arbitrumSepolia.id]: http('https://sepolia-rollup.arbitrum.io/rpc'),
   },
 });

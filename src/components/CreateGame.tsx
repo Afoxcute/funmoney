@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { Trophy, Coins, Swords, Timer, Info } from 'lucide-react';
 import { parseEther } from 'viem';
-import { useWriteContract, useWaitForTransactionReceipt, useWatchContractEvent } from 'wagmi';
-import { abi, contractAddress } from '../constants/contractInfo';
+import { useWriteContract, useWaitForTransactionReceipt, useWatchContractEvent, useChainId } from 'wagmi';
+import { getContractInfo } from '../constants';
 import toast from 'react-hot-toast';
 import { extractErrorMessages } from '../utils';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -35,10 +35,13 @@ const GAME_TYPES = [
 ];
 
 export default function CreateGame() {
+    const chainId = useChainId();
+    const { abi, contractAddress, networkName } = getContractInfo(chainId);
+    
     const { data: hash, error, isPending, writeContract } = useWriteContract();
 
           useWatchContractEvent({
-            address: contractAddress,
+            address: contractAddress as `0x${string}`,
             abi,
             eventName: 'GameCreated',
             onLogs(logs: any) {
@@ -69,7 +72,7 @@ export default function CreateGame() {
 
     try {
       await writeContract({
-        address: contractAddress,
+        address: contractAddress as `0x${string}`,
         abi,
         functionName: 'createGame',
         args: [BigInt(selectedType)],
@@ -122,6 +125,11 @@ export default function CreateGame() {
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
       <div className='space-y-6 text-white'>
+        {/* Network Info */}
+        <div className='text-sm bg-gray-800 p-3 rounded-lg border border-gray-700 flex items-center justify-between'>
+          <span>Active Network: <span className='text-blue-400'>{networkName}</span></span>
+        </div>
+        
         {/* Game Type Selection */}
         <div className='space-y-4'>
           <h2 className='text-xl font-semibold text-gray-200'>
